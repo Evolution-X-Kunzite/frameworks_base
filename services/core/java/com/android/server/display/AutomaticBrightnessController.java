@@ -114,6 +114,12 @@ public class AutomaticBrightnessController {
     // last restart, the sensor is assumed to have recovered and the backoff resets.
     private static final long SENSOR_RESTART_STABILITY_WINDOW_MILLIS = 30000;
 
+    // From the second consecutive restart attempt on, keep the listener unregistered for
+    // this long before registering it again. A back-to-back unregister/register did not
+    // bring the sensor back, so give the HAL time to really tear it down, like a screen
+    // off/on cycle does.
+    private static final long SENSOR_RESTART_GAP_MILLIS = 1000;
+
     // Maximum number of consecutive restarts (within the stability window above) before we
     // stop retrying, to avoid a restart loop chewing through battery when the sensor HAL is
     // persistently broken rather than glitching transiently.
@@ -136,6 +142,7 @@ public class AutomaticBrightnessController {
     private static final int MSG_RUN_UPDATE = 6;
     private static final int MSG_INVALIDATE_PAUSED_SHORT_TERM_MODEL = 7;
     private static final int MSG_LIGHT_SENSOR_WATCHDOG = 8;
+    private static final int MSG_LIGHT_SENSOR_REREGISTER = 9;
 
     // Callbacks for requesting updates to the display's power state
     private final Callbacks mCallbacks;
@@ -815,6 +822,7 @@ public class AutomaticBrightnessController {
             mCurrentLightSensorRate = -1;
             mHandler.removeMessages(MSG_UPDATE_AMBIENT_LUX);
             mHandler.removeMessages(MSG_LIGHT_SENSOR_WATCHDOG);
+            mHandler.removeMessages(MSG_LIGHT_SENSOR_REREGISTER);
             unregisterForegroundAppUpdater();
             mSensorManager.unregisterListener(mLightSensorListener);
         }
@@ -881,13 +889,27 @@ public class AutomaticBrightnessController {
         Slog.w(TAG, "Restarting light sensor listener (" + reason + "), attempt "
                 + mConsecutiveSensorRestarts + " of " + MAX_CONSECUTIVE_SENSOR_RESTARTS);
         mConsecutiveInvalidLuxSamples = 0;
+        mHandler.removeMessages(MSG_LIGHT_SENSOR_REREGISTER);
         mSensorManager.unregisterListener(mLightSensorListener);
+        if (attemptNumber >= 2) {
+            // Re-register after a short gap (see SENSOR_RESTART_GAP_MILLIS). The watchdog
+            // is armed so that it still counts the full timeout from the re-registration.
+            mHandler.sendEmptyMessageDelayed(MSG_LIGHT_SENSOR_REREGISTER,
+                    SENSOR_RESTART_GAP_MILLIS);
+            scheduleLightSensorWatchdog(
+                    SENSOR_RESTART_GAP_MILLIS + LIGHT_SENSOR_WATCHDOG_TIMEOUT_MILLIS);
+            return;
+        }
+        registerLightSensorListenerForRestart();
+        scheduleLightSensorWatchdog();
+    }
+
+    private void registerLightSensorListenerForRestart() {
         // Guard against re-registering with a stale/uninitialized rate.
         final int rate = mCurrentLightSensorRate > 0
                 ? mCurrentLightSensorRate : mNormalLightSensorRate;
         mSensorManager.registerListener(mLightSensorListener, mLightSensor,
                 rate * 1000, mHandler);
-        scheduleLightSensorWatchdog();
     }
 
     private void handleLightSensorEvent(long time, float lux) {
@@ -1627,6 +1649,12 @@ public class AutomaticBrightnessController {
                 case MSG_LIGHT_SENSOR_WATCHDOG:
                     restartLightSensorListener("no light sensor events received within "
                             + LIGHT_SENSOR_WATCHDOG_TIMEOUT_MILLIS + " ms");
+                    break;
+
+                case MSG_LIGHT_SENSOR_REREGISTER:
+                    if (mLightSensorEnabled) {
+                        registerLightSensorListenerForRestart();
+                    }
                     break;
             }
         }
