@@ -725,6 +725,8 @@ public class AutomaticBrightnessController {
         ipw.println("mLastObservedLux=" + mLastObservedLux);
         ipw.println("mLastObservedLuxTime=" + TimeUtils.formatUptime(mLastObservedLuxTime));
         ipw.println("mRecentLightSamples=" + mRecentLightSamples);
+        ipw.println("mConsecutiveInvalidLuxSamples=" + mConsecutiveInvalidLuxSamples);
+        ipw.println("mConsecutiveSensorRestarts=" + mConsecutiveSensorRestarts);
         ipw.println("mAmbientLightRingBuffer=" + mAmbientLightRingBuffer);
         ipw.println("mScreenAutoBrightness=" + mScreenAutoBrightness);
         ipw.println("mDisplayPolicy=" + DisplayPowerRequest.policyToString(mDisplayPolicy));
@@ -804,6 +806,11 @@ public class AutomaticBrightnessController {
             mRawScreenAutoBrightness = PowerManager.BRIGHTNESS_INVALID_FLOAT;
             mPreThresholdBrightness = PowerManager.BRIGHTNESS_INVALID_FLOAT;
             mRecentLightSamples = 0;
+            // Start from a clean slate the next time the sensor is enabled. This also keeps
+            // the restart budget from carrying over across screen-off/deep-sleep periods.
+            mConsecutiveInvalidLuxSamples = 0;
+            mConsecutiveSensorRestarts = 0;
+            mLastSensorRestartUptimeMillis = 0;
             mAmbientLightRingBuffer.clear();
             mCurrentLightSensorRate = -1;
             mHandler.removeMessages(MSG_UPDATE_AMBIENT_LUX);
@@ -815,9 +822,12 @@ public class AutomaticBrightnessController {
     }
 
     private void scheduleLightSensorWatchdog() {
+        scheduleLightSensorWatchdog(LIGHT_SENSOR_WATCHDOG_TIMEOUT_MILLIS);
+    }
+
+    private void scheduleLightSensorWatchdog(long delayMillis) {
         mHandler.removeMessages(MSG_LIGHT_SENSOR_WATCHDOG);
-        mHandler.sendEmptyMessageDelayed(MSG_LIGHT_SENSOR_WATCHDOG,
-                LIGHT_SENSOR_WATCHDOG_TIMEOUT_MILLIS);
+        mHandler.sendEmptyMessageDelayed(MSG_LIGHT_SENSOR_WATCHDOG, delayMillis);
     }
 
     // Common path for restarting the light sensor listener, whether triggered by the
@@ -829,7 +839,10 @@ public class AutomaticBrightnessController {
     // re-initialize the sensor, instead of relying on the user manually toggling
     // auto-brightness off and on in Settings.
     private void restartLightSensorListener(String reason) {
-        final long now = SystemClock.uptimeMillis();
+        if (!mLightSensorEnabled) {
+            return;
+        }
+        final long now = mClock.uptimeMillis();
         final boolean withinStabilityWindow = mLastSensorRestartUptimeMillis != 0
                 && (now - mLastSensorRestartUptimeMillis) <= SENSOR_RESTART_STABILITY_WINDOW_MILLIS;
         // Either this is the first restart, the sensor ran stably for a while since the
@@ -853,7 +866,12 @@ public class AutomaticBrightnessController {
             Slog.e(TAG, "Light sensor listener restart limit reached (" + reason
                     + "), giving up on further restarts until the sensor stabilizes");
             mConsecutiveInvalidLuxSamples = 0;
-            scheduleLightSensorWatchdog();
+            // Re-check once the stability window has elapsed instead of polling (and
+            // logging) every LIGHT_SENSOR_WATCHDOG_TIMEOUT_MILLIS in the meantime.
+            final long remainingWindow = SENSOR_RESTART_STABILITY_WINDOW_MILLIS
+                    - (now - mLastSensorRestartUptimeMillis);
+            scheduleLightSensorWatchdog(
+                    Math.max(remainingWindow, LIGHT_SENSOR_WATCHDOG_TIMEOUT_MILLIS));
             return;
         }
 
@@ -874,7 +892,6 @@ public class AutomaticBrightnessController {
 
     private void handleLightSensorEvent(long time, float lux) {
         Trace.traceCounter(Trace.TRACE_TAG_POWER, "ALS", (int) lux);
-        mHandler.removeMessages(MSG_UPDATE_AMBIENT_LUX);
 
         if (lux < 0) {
             // Sensor HAL occasionally reports transient negative/invalid lux values,
@@ -883,8 +900,14 @@ public class AutomaticBrightnessController {
             // clamped-to-zero sample here would still contaminate the ambient lux
             // average over mAmbientLightHorizonLong, dragging the calculated
             // brightness down until a new valid sample arrives.
-            Slog.w(TAG, "Ambient lux was negative (" + lux + "), discarding sample");
-            mConsecutiveInvalidLuxSamples++;
+            //
+            // This check must stay above the removeMessages(MSG_UPDATE_AMBIENT_LUX) call
+            // below: an invalid sample must not cancel an ambient lux update that a
+            // previous valid sample already scheduled, since nothing would reschedule it.
+            if (++mConsecutiveInvalidLuxSamples == 1) {
+                // Only log the first sample of a run to avoid flooding the log on a burst.
+                Slog.w(TAG, "Ambient lux was negative (" + lux + "), discarding sample");
+            }
 
             // WORKAROUND: on some devices the light sensor HAL stops delivering any
             // further events at all after a burst of invalid readings (observed after
@@ -899,6 +922,7 @@ public class AutomaticBrightnessController {
         }
 
         mConsecutiveInvalidLuxSamples = 0;
+        mHandler.removeMessages(MSG_UPDATE_AMBIENT_LUX);
 
         if (mAmbientLightRingBuffer.size() == 0) {
             // switch to using the steady-state sample rate after grabbing the initial light sample
