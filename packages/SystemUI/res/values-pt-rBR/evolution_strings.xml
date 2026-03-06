@@ -323,6 +323,19 @@
     <!-- Label for UI element which writes a clipboard-only screenshot to storage [CHAR LIMIT=30] -->
     <string name="screenshot_save_to_storage_label">Salvar no armazenamento</string>
 
+    <!-- Label for UI element which allows to use lens on screenshot [CHAR LIMIT=30] -->
+    <string name="screenshot_lens_label">Lens</string>
+
+    <!-- AI Assistant affordance [CHAR LIMIT=32] -->
+    <string name="accessibility_assistant_button">Assistente de IA</string>
+
+    <!-- Blur QS tile -->
+    <string name="quick_settings_blur_label">Desfocar</string>
+
+    <!-- Kill button in notification guts -->
+    <string name="force_stop_dlg_title">Forçar parada?</string>
+    <string name="force_stop_dlg_text">Se você forçar a parada de um aplicativo, ele poderá apresentar um funcionamento incorreto.</string>
+
     <!-- Global Actions (Compose power menu) -->
     <string name="global_actions_slide_to_power_off">Deslize para desligar</string>
     <string name="global_actions_slide_to_restart">Deslize para reiniciar</string>
