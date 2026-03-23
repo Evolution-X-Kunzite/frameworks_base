@@ -319,9 +319,22 @@
         <item quantity="other"><xliff:g id="count" example="3">%d</xliff:g> apps playing audio</item>
     </plurals>
     <string name="app_volume_panel_empty">No apps are playing audio right now</string>
+    
     <!-- Accessibility state description of an app volume slider [CHAR LIMIT=NONE] -->
     <string name="app_volume_panel_percent"><xliff:g id="percent" example="50">%d</xliff:g> percent</string>
 
     <!-- ColorOS style QS: shown in the media slot when nothing is playing -->
     <string name="qs_coloros_no_media">Not playing</string>
+    
+    <!-- Global Actions (Compose power menu) -->
+    <string name="global_actions_slide_to_power_off">Slide to power off</string>
+    <string name="global_actions_slide_to_restart">Slide to restart</string>
+    <string name="global_actions_restart_menu_title">Restart</string>
+    <string name="global_actions_cancel">Cancel</string>
+    <string name="global_actions_arrange_tiles">Arrange Tiles</string>
+    <string name="global_actions_power_menu_title">Power Menu</string>
+    <string name="global_actions_edit_description">Edit</string>
+    <string name="global_actions_add_actions">Add Actions</string>
+    <string name="global_actions_remove_description">Remove</string>
+    <string name="global_actions_resize_description">Resize</string>
 </resources>

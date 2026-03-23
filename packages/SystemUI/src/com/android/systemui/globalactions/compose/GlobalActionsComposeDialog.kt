@@ -78,6 +78,7 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import androidx.compose.ui.res.stringResource
 import androidx.core.graphics.drawable.toBitmap
 import com.android.systemui.globalactions.GlobalActionsDialogLite
 import com.android.systemui.statusbar.BlurUtils
@@ -461,7 +462,7 @@ fun GlobalActionsScreen(
             when {
                 className.contains("Power") || className.contains("ShutDown") -> {
                     confirmationTitle = getActionLabel(tile.action, context)
-                    confirmationMessage = "Slide to power off"
+                    confirmationMessage = context.getString(com.android.systemui.res.R.string.global_actions_slide_to_power_off)
                     confirmationIconBitmap = tile.action.getIcon(context)?.toBitmap(96, 96)?.asImageBitmap()
                     confirmationColor = errorColor
                     confirmationReturnsToGrid = true
@@ -474,7 +475,7 @@ fun GlobalActionsScreen(
                         currentView = GlobalActionsView.RESTART_CHOICE
                     } else {
                         confirmationTitle = getActionLabel(tile.action, context)
-                        confirmationMessage = "Slide to restart"
+                        confirmationMessage = context.getString(com.android.systemui.res.R.string.global_actions_slide_to_restart)
                         confirmationIconBitmap = tile.action.getIcon(context)?.toBitmap(96, 96)?.asImageBitmap()
                         confirmationColor = errorColor
                         confirmationReturnsToGrid = true
@@ -497,7 +498,7 @@ fun GlobalActionsScreen(
 
     val handleRestartOptionClick: (GlobalActionsDialogLite.Action) -> Unit = { action ->
         confirmationTitle = getActionLabel(action, context)
-        confirmationMessage = "Slide to restart"
+        confirmationMessage = context.getString(com.android.systemui.res.R.string.global_actions_slide_to_restart)
         confirmationIconBitmap = action.getIcon(context)?.toBitmap(96, 96)?.asImageBitmap()
         confirmationColor = errorColor
         confirmationReturnsToGrid = false
@@ -650,7 +651,7 @@ private fun RestartChoiceMenu(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Restart",
+                text = stringResource(com.android.systemui.res.R.string.global_actions_restart_menu_title),
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onSurface
@@ -680,7 +681,7 @@ private fun RestartChoiceMenu(
             Spacer(modifier = Modifier.height(16.dp))
             
             TextButton(onClick = onBack) {
-                Text("Cancel")
+                Text(stringResource(com.android.systemui.res.R.string.global_actions_cancel))
             }
         }
     }
@@ -826,7 +827,7 @@ private fun PowerMenuContainer(
                             exit = fadeOut() + shrinkVertically()
                         ) {
                             Text(
-                                text = "Add Actions",
+                                text = stringResource(com.android.systemui.res.R.string.global_actions_add_actions),
                                 style = MaterialTheme.typography.titleSmall,
                                 fontWeight = FontWeight.Bold,
                                 color = MaterialTheme.colorScheme.onSurface,
@@ -913,7 +914,10 @@ private fun MenuHeader(isEditMode: Boolean, onToggleEdit: () -> Unit) {
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            text = if (isEditMode) "Arrange Tiles" else "Power Menu",
+            text = if (isEditMode)
+               stringResource(com.android.systemui.res.R.string.global_actions_arrange_tiles)
+            else
+               stringResource(com.android.systemui.res.R.string.global_actions_power_menu_title),
             style = MaterialTheme.typography.headlineSmall,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.onSurface
@@ -928,7 +932,7 @@ private fun MenuHeader(isEditMode: Boolean, onToggleEdit: () -> Unit) {
         ) {
             Icon(
                 imageVector = if (isEditMode) Icons.Rounded.Check else Icons.Rounded.Edit,
-                contentDescription = "Edit",
+                contentDescription = stringResource(com.android.systemui.res.R.string.global_actions_edit_description),
                 modifier = Modifier.size(20.dp)
             )
         }
@@ -1278,7 +1282,7 @@ private fun TileItem(
             ) {
                 Icon(
                     imageVector = Icons.Rounded.Close,
-                    contentDescription = "Remove",
+                    contentDescription = stringResource(com.android.systemui.res.R.string.global_actions_remove_description),
                     modifier = Modifier.padding(6.dp),
                     tint = MaterialTheme.colorScheme.onError
                 )
@@ -1377,7 +1381,7 @@ private fun ResizeHandle(
     ) {
         Icon(
             imageVector = Icons.Rounded.DragHandle,
-            contentDescription = "Resize",
+            contentDescription = stringResource(com.android.systemui.res.R.string.global_actions_resize_description),
             modifier = Modifier
                 .padding(8.dp)
                 .rotate(45f)
@@ -1580,7 +1584,7 @@ private fun ConfirmationSliderView(
             }
         ) {
             Text(
-                text = "Cancel",
+                text = stringResource(com.android.systemui.res.R.string.global_actions_cancel),
                 color = MaterialTheme.colorScheme.onSurface,
                 style = MaterialTheme.typography.labelLarge
             )
