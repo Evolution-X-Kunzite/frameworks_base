@@ -322,4 +322,16 @@
 
     <!-- Label for UI element which writes a clipboard-only screenshot to storage [CHAR LIMIT=30] -->
     <string name="screenshot_save_to_storage_label">Salvar no armazenamento</string>
+
+    <!-- Global Actions (Compose power menu) -->
+    <string name="global_actions_slide_to_power_off">Deslize para desligar</string>
+    <string name="global_actions_slide_to_restart">Deslize para reiniciar</string>
+    <string name="global_actions_restart_menu_title">Reiniciar</string>
+    <string name="global_actions_cancel">Cancelar</string>
+    <string name="global_actions_arrange_tiles">Organizar blocos</string>
+    <string name="global_actions_power_menu_title">Menu de energia</string>
+    <string name="global_actions_edit_description">Editar</string>
+    <string name="global_actions_add_actions">Adicionar ações</string>
+    <string name="global_actions_remove_description">Remover</string>
+    <string name="global_actions_resize_description">Redimensionar</string>
 </resources>
