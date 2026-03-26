@@ -359,4 +359,14 @@
     <string name="global_actions_add_actions">Adicionar ações</string>
     <string name="global_actions_remove_description">Remover</string>
     <string name="global_actions_resize_description">Redimensionar</string>
+    
+    <!-- Dynamic Island -->
+    <string name="dynamic_island_flashlight_pill_on">Lig.</string>
+    <string name="dynamic_island_flashlight_state_on">Ligado</string>
+    <string name="dynamic_island_open_clock_action">Abrir relógio</string>
+    <string name="dynamic_island_next_alarm">Próximo alarme</string>
+    <string name="screenrecord_ongoing_screen_only">Gravando tela</string>
+    <string name="dynamic_island_screen_record_countdown">Inicia em %d</string>
+    <string name="dynamic_island_screen_record_active">Gravação ativa</string>
+    <string name="screenrecord_stop_label">Parar</string>
 </resources>
