@@ -11,7 +11,7 @@
         android:fillColor="#000000"/>
     <path
         android:name="path_1"
-        android:pathData="M 1.5 7 L 1.5 3 L 3.8 3 C 5.4 3 5.4 5.3 3.8 5.3 L 1.5 5.3 M 3.4 5.3 L 5 7"
+        android:pathData="M 2 6 L 2 2 L 4.3 2 C 5.9 2 5.9 4.3 4.3 4.3 L 2 4.3 M 3.9 4.3 L 5.5 6"
         android:strokeColor="#000000"
         android:strokeWidth="1.2"
         android:strokeLineCap="square"/>
