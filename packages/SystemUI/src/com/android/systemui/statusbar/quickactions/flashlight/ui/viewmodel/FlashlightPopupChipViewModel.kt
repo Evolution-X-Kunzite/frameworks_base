@@ -120,7 +120,7 @@ constructor(
                             ),
                     )
                 ),
-            chipContent = ChipContent.Text(context.getString(R.string.dynamic_island_flashlight_short)),
+            chipContent = ChipContent.Text(context.getString(R.string.dynamic_island_flashlight_pill_on)),
             colors = ChipColors.DynamicIsland,
             contentDescription = contentDescription,
             popupContent = PopupContentModel.Flashlight(model),

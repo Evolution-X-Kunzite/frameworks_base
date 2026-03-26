@@ -159,7 +159,7 @@ constructor(
                     if (activeNotification?.hasSnoozeAction() == true) {
                         context.getString(R.string.dynamic_island_alarm_active_title)
                     } else {
-                        context.getString(R.string.dynamic_island_alarm_title)
+                        context.getString(R.string.dynamic_island_next_alarm)
                     },
                 triggerTimeMs = alarm?.triggerTime ?: 0L,
                 chipTimeText = chipTimeText,

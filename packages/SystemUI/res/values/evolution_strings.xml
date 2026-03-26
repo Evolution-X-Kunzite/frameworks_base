@@ -337,4 +337,14 @@
     <string name="global_actions_add_actions">Add Actions</string>
     <string name="global_actions_remove_description">Remove</string>
     <string name="global_actions_resize_description">Resize</string>
+
+    <!-- Dynamic Island -->
+    <string name="dynamic_island_flashlight_pill_on">On</string>
+    <string name="dynamic_island_flashlight_state_on">On</string>
+    <string name="dynamic_island_open_clock_action">Open clock</string>
+    <string name="dynamic_island_next_alarm">Next alarm</string>
+    <string name="screenrecord_ongoing_screen_only">Screen recording</string>
+    <string name="dynamic_island_screen_record_countdown">Start in %d</string>
+    <string name="dynamic_island_screen_record_active">Record is active</string>
+    <string name="screenrecord_stop_label">Stop</string>
 </resources>

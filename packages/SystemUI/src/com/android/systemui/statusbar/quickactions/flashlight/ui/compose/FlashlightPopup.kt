@@ -47,6 +47,7 @@ import com.android.systemui.statusbar.quickactions.ui.compose.PopupSurface
 
 private val PopupShape = RoundedCornerShape(32.dp)
 private val AccentColor = Color(0xFFFFD166)
+private const val SECONDARY_TEXT_ALPHA = 0.73f
 
 /** Expanded flashlight card surfaced in the dynamic island. */
 @Composable
@@ -54,6 +55,11 @@ fun FlashlightPopup(
     model: FlashlightPopupModel,
     modifier: Modifier = Modifier,
 ) {
+    val stateText =
+        model.levelPercent?.let {
+            stringResource(R.string.quick_settings_flashlight_tile_level_percentage, it)
+        } ?: stringResource(R.string.dynamic_island_flashlight_state_on)
+
     PopupSurface(
         shape = PopupShape,
         modifier = modifier.widthIn(min = 280.dp, max = 340.dp),
@@ -83,21 +89,15 @@ fun FlashlightPopup(
                         fontWeight = FontWeight.SemiBold,
                     )
                     Text(
-                        text =
-                            model.levelPercent?.let {
-                                stringResource(R.string.quick_settings_flashlight_tile_level_percentage, it)
-                            } ?: stringResource(R.string.dynamic_island_flashlight_enabled),
+                        text = stateText,
                         style = MaterialTheme.typography.bodyMedium,
-                        color = LocalContentColor.current.copy(alpha = 0.73f),
+                        color = LocalContentColor.current.copy(alpha = SECONDARY_TEXT_ALPHA),
                     )
                 }
             }
 
             Text(
-                text =
-                    model.levelPercent?.let {
-                        stringResource(R.string.quick_settings_flashlight_tile_level_percentage, it)
-                    } ?: stringResource(R.string.dynamic_island_flashlight_short),
+                text = stateText,
                 style = MaterialTheme.typography.displaySmall,
                 fontWeight = FontWeight.Bold,
                 color = AccentColor,
