@@ -14,6 +14,6 @@
         android:name="path_1"
         android:pathData="M 15.5 14 L 22.5 20 M 22.5 14 L 15.5 20"
         android:strokeColor="#000000"
-        android:strokeWidth="1.2"
+        android:strokeWidth="2.0"
         android:strokeLineCap="round"/>
 </vector>
