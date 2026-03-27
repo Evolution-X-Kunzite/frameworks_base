@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (C) 2026 VoltageOS
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+<resources>
+    <string name="app_name">Backup de Dados de Apps</string>
+    <string name="tab_apps">Apps</string>
+    <string name="tab_backups">Backups</string>
+    <string name="backup_selected">Fazer backup dos selecionados</string>
+    <string name="restore">Restaurar</string>
+    <string name="verify">Verificar</string>
+    <string name="delete">Excluir</string>
+    <string name="backup_complete">Backup concluído</string>
+    <string name="restore_complete">Restauração concluída - reabra o app</string>
+    <string name="cancel">Cancelar</string>
+    <string name="select_at_least_one">Selecione pelo menos um app</string>
+    <string name="confirm_restore_title">Restaurar %1$s?</string>
+    <string name="confirm_restore_message">Isso vai reinstalar o APK e substituir todos os dados do app.\nO app será finalizado à força durante a restauração.</string>
+    <string name="confirm_delete_title">Excluir backup?</string>
+    <string name="confirm_delete_message">Excluir o backup de %1$s?\nEsta ação não pode ser desfeita.</string>
+
+    <string name="backup_headline">Faça backup dos seus apps</string>
+    <string name="backup_subheadline">Crie um snapshot dos apps e seus dados, e restaure quando quiser.</string>
+    <string name="summary_empty_count">Nenhum app selecionado</string>
+    <string name="summary_empty_size">Escolha apps para fazer backup</string>
+    <string name="summary_count">%1$d apps selecionados</string>
+    <string name="summary_count_one">1 app selecionado</string>
+    <string name="summary_size">Cerca de %1$s a arquivar</string>
+    <string name="chip_exclude_cache">Excluir cache</string>
+    <string name="action_select_all">Selecionar tudo</string>
+    <string name="action_clear">Limpar</string>
+    <string name="fab_backup_count">Fazer backup (%1$d)</string>
+    <string name="fab_restore_count">Restaurar (%1$d)</string>
+    <string name="action_delete_selected">Excluir selecionados</string>
+    <string name="select_at_least_one_backup">Selecione pelo menos um backup</string>
+    <string name="confirm_restore_selected_title">Restaurar %1$d backups?</string>
+    <string name="confirm_delete_selected_title">Excluir %1$d backups?</string>
+    <string name="confirm_delete_selected_message">Os backups selecionados serão excluídos permanentemente.\nEsta ação não pode ser desfeita.</string>
+    <string name="progress_restoring">Preparando restauração\u2026</string>
+    <string name="batch_passphrase_title">Backups criptografados selecionados</string>
+    <string name="batch_passphrase_message">Um ou mais backups selecionados estão criptografados. Digite a senha usada quando foram criados. Todos os backups criptografados deste lote devem usar a mesma senha.</string>
+    <string name="passphrase_required">Senha obrigatória</string>
+
+    <string name="backup_options_title">Opções de backup</string>
+    <string name="section_encryption">Criptografia</string>
+    <string name="section_include">Incluir</string>
+    <string name="section_retention">Retenção</string>
+    <string name="hint_passphrase">Senha (vazio = sem criptografia)</string>
+    <string name="hint_keep">Manter os últimos N backups (vazio = manter todos)</string>
+    <string name="comp_apk">APK</string>
+    <string name="comp_app_data">Dados do app</string>
+    <string name="comp_de_data">Protegidos pelo dispositivo</string>
+    <string name="comp_external">Armazenamento externo</string>
+    <string name="select_one_component">Selecione pelo menos um componente</string>
+    <string name="action_back_up">Fazer backup</string>
+    <string name="content_includes">Inclui %1$s</string>
+    <string name="content_apk">App (APK)</string>
+    <string name="content_app_data">Dados do app</string>
+    <string name="content_device_data">Dados protegidos</string>
+    <string name="content_external">Armazenamento externo</string>
+    <string name="content_permissions">Permissões e configurações</string>
+    <string name="content_encrypted">Criptografado</string>
+
+    <string name="hint_passphrase_confirm">Confirme a senha</string>
+    <string name="passphrase_mismatch">As senhas não coincidem</string>
+    <string name="hint_search">Buscar apps</string>
+    <string name="action_sort">Ordenar</string>
+    <string name="sort_by_name">Ordenado por nome</string>
+    <string name="sort_by_size">Ordenado por tamanho</string>
+    <string name="last_backup">Último backup: %1$s</string>
+    <string name="last_backup_never">Nunca feito</string>
+    <string name="backup_opt_out">Não permite backup</string>
+    <string name="not_enough_space_title">Espaço insuficiente</string>
+    <string name="not_enough_space_message">Os apps selecionados precisam de cerca de %1$s, mas só há %2$s disponível.</string>
+    <string name="backup_anyway">Fazer backup mesmo assim</string>
+    <string name="restore_downgrade_warning">Mais antigo que a versão instalada: %1$s</string>
+    <string name="verify_all">Verificar tudo</string>
+    <string name="verify_failed_badge">Falha na verificação</string>
+    <string name="verify_all_message">Verifica os checksums de todos os backups. Digite a senha para incluir os criptografados, ou deixe em branco para ignorá-los.</string>
+    <string name="verify_all_result">%1$d válidos \u00b7 %2$d com falha \u00b7 %3$d ignorados</string>
+    <string name="results_title_backup">Resultados do backup</string>
+    <string name="results_title_restore">Resultados da restauração</string>
+    <string name="deleted_backup">%1$s excluído</string>
+    <string name="undo">Desfazer</string>
+    <string name="export">Exportar</string>
+    <string name="export_message">Copiar o backup de %1$s para a pasta Downloads?</string>
+    <string name="export_done">Salvo em %1$s</string>
+    <string name="export_failed">Falha na exportação</string>
+</resources>
