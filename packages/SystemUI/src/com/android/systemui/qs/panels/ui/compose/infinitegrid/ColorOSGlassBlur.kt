@@ -22,6 +22,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.toRect
 import androidx.compose.ui.graphics.Outline
@@ -31,6 +32,7 @@ import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.layout.boundsInWindow
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.positionInWindow
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalView
@@ -38,6 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
 import com.android.internal.graphics.drawable.BackgroundBlurDrawable
 import java.util.function.Consumer
+import kotlin.math.max
 import kotlin.math.min
 
 /**
@@ -61,14 +64,34 @@ internal class ColorOSGlassBlur(
 /** The glass of the expanded ColorOS panel, null where the regions cannot be used. */
 internal val LocalColorOSGlassBlur = compositionLocalOf<ColorOSGlassBlur?> { null }
 
-private val ColorOSGlassBlurRadius = 24.dp
+/**
+ * The blur radius. It is 62px on a 440dpi device, the one the glass was matched against ColorOS
+ * on, and scales with the density like the tiles it blurs behind do.
+ */
+private val ColorOSGlassBlurRadius = 22.5.dp
 
 /**
  * Overrides the blur radius, in pixels, to match it by eye on a device:
- * `setprop debug.evolution.lg.cos_blur 62`. Unset or 0 keeps [ColorOSGlassBlurRadius]. It is read
- * when a region is drawn, so it applies the next time the panel is opened.
+ * `setprop debug.evolution.lg.cos_blur 80`. Unset or 0 keeps [ColorOSGlassBlurRadius]. It is
+ * followed live, the regions take it the next time they are drawn.
  */
 private const val ColorOSGlassBlurRadiusProperty = "debug.evolution.lg.cos_blur"
+
+/** How close to the edge of the window counts as touching it, in pixels. */
+private const val ColorOSGlassEdgeSlop = 0.5f
+
+/** The radius override in pixels, 0 for none. Read once and again when a system property changes. */
+private object ColorOSGlassBlurTune {
+    @Volatile
+    var overridePx = read()
+        private set
+
+    init {
+        SystemProperties.addChangeCallback { overridePx = read() }
+    }
+
+    private fun read(): Int = SystemProperties.getInt(ColorOSGlassBlurRadiusProperty, 0)
+}
 
 /** Below this alpha a region is not worth keeping in SurfaceFlinger. */
 private const val ColorOSGlassMinAlpha = 0.01f
@@ -144,8 +167,10 @@ private class ColorOSGlassRegion {
  * null.
  *
  * The region is the part of the element that is visible in the window, so what a scroller or any
- * other parent clips does not leave glass behind. It is hidden while the panel is, and when the
- * element leaves the composition.
+ * other parent clips does not leave glass behind. Where that part reaches the edge of the window,
+ * the region goes on to the real edge of the element instead: what is past the window is not
+ * seen, and the rim of the glass does not run along the edge of the window like it was a cut.
+ * It is hidden while the panel is, and when the element leaves the composition.
  */
 @Composable
 internal fun Modifier.colorOSGlassBlur(shape: Shape, material: Int): Modifier {
@@ -172,11 +197,37 @@ internal fun Modifier.colorOSGlassBlur(shape: Shape, material: Int): Modifier {
 
     return this.onGloballyPositioned { coordinates ->
             if (!coordinates.isAttached) return@onGloballyPositioned
-            val inWindow = coordinates.boundsInWindow()
+            val clipped = coordinates.boundsInWindow()
+            if (clipped.width <= 0f || clipped.height <= 0f) {
+                // Nothing of it is in the window.
+                visible = Rect.Zero
+                return@onGloballyPositioned
+            }
+            val origin = coordinates.positionInWindow()
+            val windowWidth = view.rootView.width.toFloat()
+            val windowHeight = view.rootView.height.toFloat()
+            val left =
+                if (clipped.left <= ColorOSGlassEdgeSlop) min(clipped.left, origin.x)
+                else clipped.left
+            val top =
+                if (clipped.top <= ColorOSGlassEdgeSlop) min(clipped.top, origin.y)
+                else clipped.top
+            val right =
+                if (clipped.right >= windowWidth - ColorOSGlassEdgeSlop) {
+                    max(clipped.right, origin.x + coordinates.size.width)
+                } else {
+                    clipped.right
+                }
+            val bottom =
+                if (clipped.bottom >= windowHeight - ColorOSGlassEdgeSlop) {
+                    max(clipped.bottom, origin.y + coordinates.size.height)
+                } else {
+                    clipped.bottom
+                }
             visible =
                 Rect(
-                        coordinates.windowToLocal(inWindow.topLeft),
-                        coordinates.windowToLocal(inWindow.bottomRight),
+                        coordinates.windowToLocal(Offset(left, top)),
+                        coordinates.windowToLocal(Offset(right, bottom)),
                     )
                     .intersect(coordinates.size.toSize().toRect())
         }
@@ -203,8 +254,7 @@ internal fun Modifier.colorOSGlassBlur(shape: Shape, material: Int): Modifier {
             drawable.setMaterial(material)
             drawable.setColor(0)
             drawable.setBlurRadius(
-                SystemProperties.getInt(ColorOSGlassBlurRadiusProperty, 0).takeIf { it > 0 }
-                    ?: defaultRadius
+                ColorOSGlassBlurTune.overridePx.takeIf { it > 0 } ?: defaultRadius
             )
             drawable.setCornerRadius(min(corner, shown.height / 2f))
             drawable.alpha = (alpha * 255).toInt()
