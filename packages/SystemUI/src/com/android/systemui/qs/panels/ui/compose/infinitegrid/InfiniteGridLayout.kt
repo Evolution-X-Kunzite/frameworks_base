@@ -60,11 +60,11 @@ import javax.inject.Inject
 import kotlinx.coroutines.launch
 
 /** Gap between tiles and rows in the ColorOS Quick Settings style (ColorOS 17). */
-val ColorOSGap = 16.dp
+val ColorOSGap = 17.dp
 
 /**
  * Gap between the rows of round icon tiles in the ColorOS style. The label lives inside the tile
- * cell, so ColorOS rows are packed much closer than the 16dp used between the wide cards.
+ * cell, so ColorOS rows are packed much closer than the 17dp used between the wide cards.
  */
 val ColorOSIconRowGap = 4.dp
 

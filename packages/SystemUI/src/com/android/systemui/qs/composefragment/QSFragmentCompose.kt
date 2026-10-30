@@ -1068,9 +1068,9 @@ constructor(
                                             }
                                         },
                                         listening = isListening,
-                                        // ColorOS 17 uses ~38dp side margins; the stock QS
+                                        // ColorOS 17 uses ~39dp side margins; the stock QS
                                         // margin already gives ~16dp, so add the rest.
-                                        modifier = Modifier.padding(horizontal = 22.dp),
+                                        modifier = Modifier.padding(horizontal = 23.dp),
                                         availableHeight = colorOSAvailableHeight,
                                         onFitChanged = { colorOSContentFits = it },
                                         // The glass is drawn by SurfaceFlinger and does not

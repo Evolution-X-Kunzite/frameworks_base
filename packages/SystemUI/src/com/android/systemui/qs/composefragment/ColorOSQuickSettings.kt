@@ -229,7 +229,7 @@ internal fun ContentScope.ColorOSQuickSettingsLayout(
     val glass = colorOSGlass(blurred = glassBlur != null)
 
     BoxWithConstraints(modifier = modifier.fillMaxWidth()) {
-        // ColorOS is built on four equal columns with a 16dp gap. The round tiles, the pills, the
+        // ColorOS is built on four equal columns with a 17dp gap. The round tiles, the pills, the
         // media card and the sliders all take their size from the column width, so the circles
         // fill their column whatever the screen width is. When the screen is too short for that,
         // the tiles shrink and the grid loses a row, see colorOSFit.
