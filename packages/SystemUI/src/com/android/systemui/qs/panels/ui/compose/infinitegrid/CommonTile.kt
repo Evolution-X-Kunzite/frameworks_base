@@ -373,18 +373,43 @@ fun LargeTileContent(
         val animatedBackgroundColor by
             animateColorAsState(colors.iconBackground, label = "QSTileDualTargetBackgroundColor")
         val focusBorderColor = MaterialTheme.colorScheme.secondary
+        // The icon circle of a ColorOS pill is glass, like the round tiles: a blur region of its
+        // own that a white bubble fades in over while the tile is on, so the lit rim of the glass
+        // still shows around the bubble. Without blur it is the flat fill with the glass rim.
+        val colorOSStyle = LocalColorOSQsStyle.current
+        val onGlass = colorOSStyle && LocalColorOSGlassBlur.current != null
+        val glassMaterial =
+            if (active) colorOSGlassActiveTileMaterial() else colorOSGlassTileMaterial()
+        val glassBubbleAlpha by
+            animateFloatAsState(if (onGlass && active) 1f else 0f, label = "QSTileGlassBubble")
         Box(
             modifier =
                 Modifier.size(CommonTileDefaults.ToggleTargetSize).thenIf(isDualTarget) {
                     Modifier.borderOnFocus(color = focusBorderColor, iconShape.topEnd)
                         .clip(iconShape)
+                        .then(
+                            if (onGlass) Modifier.colorOSGlassBlur(iconShape, glassMaterial)
+                            else Modifier
+                        )
                         .drawBehind {
-                            val brush: Brush? = colors.backgroundGradient
-                            if (brush != null) {
-                                drawRect(brush = brush)
+                            if (onGlass) {
+                                if (glassBubbleAlpha > 0f) {
+                                    drawRect(
+                                        color = animatedBackgroundColor,
+                                        alpha = glassBubbleAlpha,
+                                    )
+                                }
                             } else {
-                                drawRect(animatedBackgroundColor)
+                                val brush: Brush? = colors.backgroundGradient
+                                if (brush != null) {
+                                    drawRect(brush = brush)
+                                } else {
+                                    drawRect(animatedBackgroundColor)
+                                }
                             }
+                        }
+                        .thenIf(colorOSStyle && !onGlass) {
+                            Modifier.border(width = 1.dp, brush = ColorOSTileRim, shape = iconShape)
                         }
                         // apply the squish effect after the bg is drawn
                         .verticalSquish(squishiness)
