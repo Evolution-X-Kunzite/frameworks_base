@@ -363,9 +363,15 @@ fun LargeTileContent(
     labelMaxLines: Int = 1,
 ) {
     val isDualTarget = toggleClick != null
+    val colorOSStyle = LocalColorOSQsStyle.current
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = tileHorizontalArrangement(),
+        horizontalArrangement =
+            if (colorOSStyle) {
+                Arrangement.spacedBy(space = CommonTileDefaults.ColorOSPillArrangementPadding)
+            } else {
+                tileHorizontalArrangement()
+            },
         modifier = modifier,
     ) {
         // Icon
@@ -376,7 +382,6 @@ fun LargeTileContent(
         // The icon circle of a ColorOS pill is glass, like the round tiles: a blur region of its
         // own that a white bubble fades in over while the tile is on, so the lit rim of the glass
         // still shows around the bubble. Without blur it is the flat fill with the glass rim.
-        val colorOSStyle = LocalColorOSQsStyle.current
         val onGlass = colorOSStyle && LocalColorOSGlassBlur.current != null
         val glassMaterial =
             if (active) colorOSGlassActiveTileMaterial() else colorOSGlassTileMaterial()
@@ -491,7 +496,8 @@ fun LargeTileLabels(
         TileLabel(
             text = label,
             style = MaterialTheme.typography.titleSmallEmphasized.copy(
-                fontWeight = FontWeight.SemiBold,
+                fontWeight =
+                    if (LocalColorOSQsStyle.current) FontWeight.Medium else FontWeight.SemiBold,
             ),
             color = { animatedLabelColor },
             isVisible = isVisible,
@@ -658,7 +664,12 @@ fun Modifier.tileTestTag(iconOnly: Boolean): Modifier {
 @Composable
 fun Modifier.largeTilePadding(isDualTarget: Boolean = false): Modifier {
     return padding(
-        start = CommonTileDefaults.StartPadding,
+        start =
+            if (LocalColorOSQsStyle.current) {
+                CommonTileDefaults.ColorOSPillStartPadding
+            } else {
+                CommonTileDefaults.StartPadding
+            },
         end = if (isDualTarget) CommonTileDefaults.DualTargetEndPadding else TileEndPadding,
     )
 }
@@ -758,7 +769,7 @@ object CommonTileDefaults {
 
     /** ColorOS style sizes, measured from ColorOS 17. The default style is unchanged. */
     val ColorOSTileHeight = 66.dp
-    val ColorOSToggleTargetSize = 46.dp
+    val ColorOSToggleTargetSize = 44.dp
 
     /** Room under a classic round icon tile for its label, on top of [TileHeight]. */
     val ClassicLabelHeight = 32.dp
@@ -786,6 +797,13 @@ object CommonTileDefaults {
     val ChevronSize = 14.dp
     val TileEndPadding = 12.dp
     val TileArrangementPadding = 6.dp
+
+    /**
+     * ColorOS pills, measured from ColorOS 17: the icon circle sits as far from the left edge as
+     * from the top and bottom, and the text is a little further from the circle.
+     */
+    val ColorOSPillStartPadding = 10.5.dp
+    val ColorOSPillArrangementPadding = 8.dp
     val TileLabelBlurWidth = 32.dp
     const val TILE_MARQUEE_ITERATIONS = 1
     const val TILE_INITIAL_DELAY_MILLIS = 2000
