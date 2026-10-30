@@ -458,7 +458,7 @@ private fun ColorOSBrightnessSlider(
 
     ColorOSVerticalSlider(
         fraction = fraction,
-        iconRes = BrightnessSliderViewModel.getIconForPercentage(fraction * 100f),
+        iconRes = R.drawable.ic_coloros_brightness,
         iconTint = ColorOSSliderIconOnFill,
         // At full brightness only the sun icon turns orange, like the 🔆 emoji.
         fullIconTint = ColorOSBrightnessFull,
