@@ -53,12 +53,6 @@ private val ColorOSTileClips =
         "night" to ColorOSTileClip(R.raw.coloros_tile_night, R.raw.coloros_tile_night_inactive),
     )
 
-/**
- * Tiles whose icon shows a state (the signal strength), so only the animation of the switch is
- * ColorOS, and the icon of the tile itself is drawn as usual once it has played.
- */
-private val ColorOSTileKeepsOwnIcon = setOf("wifi", "internet", "cell")
-
 private object ColorOSTileLottie {
     private val compositions = ConcurrentHashMap<Int, Result<LottieComposition>>()
 
@@ -95,12 +89,15 @@ internal fun colorOSTileLottie(
     var shown by remember(spec) { mutableStateOf<LottieComposition?>(null) }
     var from by remember(spec) { mutableStateOf(active) }
     var playing by remember(spec) { mutableStateOf(false) }
+    // The clip could not be loaded, so the regular icon is the only one there is.
+    var failed by remember(spec) { mutableStateOf(false) }
     val progress = remember(spec) { Animatable(1f) }
     val lastOn = remember(spec) { OnColor(onColor) }
     if (active) lastOn.color = onColor
     LaunchedEffect(spec, active) {
         val forward = ColorOSTileLottie.load(context, clip.on) ?: run {
             shown = null
+            failed = true
             return@LaunchedEffect
         }
         val changed = from != active
@@ -116,8 +113,8 @@ internal fun colorOSTileLottie(
         shown = forward
         progress.snapTo(if (active) 1f else 0f)
     }
-    val composition = shown ?: return false
-    if (!playing && spec in ColorOSTileKeepsOwnIcon) return false
+    // While the clip loads nothing is drawn, so the regular icon does not flash before it.
+    val composition = shown ?: return !failed
     val on = if (active) onColor else lastOn.color
     val start = if (playing && !active) on else offColor
     val end = if (playing && !active) offColor else on
