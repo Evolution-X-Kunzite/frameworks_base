@@ -476,10 +476,7 @@ fun ContentScope.Tile(
                                     colors = colors,
                                     labelHide = labelHide,
                                     rim = if (colorOSStyle) ColorOSTileRim else null,
-                                    glass =
-                                        colorOSStyle &&
-                                            glassBlur != null &&
-                                            uiState.visualState != STATE_ACTIVE,
+                                    glass = colorOSStyle && glassBlur != null,
                                     chevron =
                                         colorOSStyle && tile.spec.spec in COLOROS_DROPDOWN_TILES,
                                     pressSource = interactionSource.takeIf { colorOSStyle },

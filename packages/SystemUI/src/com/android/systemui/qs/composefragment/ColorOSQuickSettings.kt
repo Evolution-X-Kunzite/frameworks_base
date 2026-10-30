@@ -91,7 +91,6 @@ import com.android.systemui.qs.panels.ui.compose.infinitegrid.ColorOSSliderFill
 import com.android.systemui.qs.panels.ui.compose.infinitegrid.ColorOSTileRim
 import com.android.systemui.qs.panels.ui.compose.infinitegrid.LocalColorOSGlassBlur
 import com.android.systemui.qs.panels.ui.compose.infinitegrid.colorOSGlassBlur
-import com.android.systemui.qs.panels.ui.compose.infinitegrid.colorOSGlassCardMaterial
 import com.android.systemui.qs.panels.ui.compose.infinitegrid.colorOSGlassTileMaterial
 import com.android.systemui.qs.panels.ui.compose.infinitegrid.rememberColorOSGlassBlur
 import com.android.systemui.qs.panels.ui.compose.infinitegrid.CommonTileDefaults
@@ -275,7 +274,7 @@ internal fun ContentScope.ColorOSQuickSettingsLayout(
                             .fillMaxHeight()
                             // Playing and idle share the same glass slot, like the other ColorOS
                             // cards, the media card only lays out its content on it.
-                            .glassSurface(glass, ColorOSMediaShape, card = true),
+                            .glassSurface(glass, ColorOSMediaShape),
                     contentAlignment = Alignment.Center,
                 ) {
                     mediaHost(Modifier.matchParentSize())
@@ -336,8 +335,7 @@ private data class ColorOSGlass(
     val dark: Boolean,
     /** Whether the glass is drawn by SurfaceFlinger, and not with [fill] and the rim. */
     val blurred: Boolean,
-    val tileMaterial: Int,
-    val cardMaterial: Int,
+    val material: Int,
 )
 
 @Composable
@@ -351,25 +349,20 @@ private fun colorOSGlass(blurred: Boolean): ColorOSGlass {
         accent = accent,
         dark = dark,
         blurred = blurred,
-        tileMaterial = colorOSGlassTileMaterial(),
-        cardMaterial = colorOSGlassCardMaterial(),
+        material = colorOSGlassTileMaterial(),
     )
 }
 
 /**
- * The glass of a pill, a slider, the ringer switch or, with [card], the media card. SurfaceFlinger
- * draws it, with the tint, the lit rim and the glow of the ColorOS material, when [glass] is
- * [ColorOSGlass.blurred]. Otherwise it is a translucent fill with a rim.
+ * The glass of a pill, a slider, the ringer switch or the media card, which all use the material
+ * of the tiles that are off. SurfaceFlinger draws it, with the tint, the lit rim and the glow of the
+ * ColorOS material, when [glass] is [ColorOSGlass.blurred]. Otherwise it is a translucent fill
+ * with a rim.
  */
 @Composable
-private fun Modifier.glassSurface(
-    glass: ColorOSGlass,
-    shape: Shape,
-    card: Boolean = false,
-): Modifier =
+private fun Modifier.glassSurface(glass: ColorOSGlass, shape: Shape): Modifier =
     if (glass.blurred) {
-        this.clip(shape)
-            .colorOSGlassBlur(shape, if (card) glass.cardMaterial else glass.tileMaterial)
+        this.clip(shape).colorOSGlassBlur(shape, glass.material)
     } else {
         this.clip(shape).background(glass.fill, shape).border(1.dp, ColorOSTileRim, shape)
     }

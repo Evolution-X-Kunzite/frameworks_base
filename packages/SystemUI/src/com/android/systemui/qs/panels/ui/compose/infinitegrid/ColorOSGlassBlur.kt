@@ -63,6 +63,13 @@ internal val LocalColorOSGlassBlur = compositionLocalOf<ColorOSGlassBlur?> { nul
 
 private val ColorOSGlassBlurRadius = 24.dp
 
+/**
+ * Overrides the blur radius, in pixels, to match it by eye on a device:
+ * `setprop debug.evolution.lg.cos_blur 62`. Unset or 0 keeps [ColorOSGlassBlurRadius]. It is read
+ * when a region is drawn, so it applies the next time the panel is opened.
+ */
+private const val ColorOSGlassBlurRadiusProperty = "debug.evolution.lg.cos_blur"
+
 /** Below this alpha a region is not worth keeping in SurfaceFlinger. */
 private const val ColorOSGlassMinAlpha = 0.01f
 
@@ -112,12 +119,15 @@ internal fun colorOSGlassTileMaterial(): Int =
     if (colorOSDarkPanel()) BackgroundBlurDrawable.MATERIAL_TILE_DARK
     else BackgroundBlurDrawable.MATERIAL_TILE_LIGHT
 
-/** The glass of the media card. */
+/**
+ * The glass under the bubble of a round tile that is on. The bubble is a touch short of opaque, so
+ * the lit rim and the glow of this material still show around it.
+ */
 @Composable
 @ReadOnlyComposable
-internal fun colorOSGlassCardMaterial(): Int =
-    if (colorOSDarkPanel()) BackgroundBlurDrawable.MATERIAL_CARD_DARK
-    else BackgroundBlurDrawable.MATERIAL_CARD_LIGHT
+internal fun colorOSGlassActiveTileMaterial(): Int =
+    if (colorOSDarkPanel()) BackgroundBlurDrawable.MATERIAL_TILE_ACTIVE_DARK
+    else BackgroundBlurDrawable.MATERIAL_TILE_ACTIVE_LIGHT
 
 /** Keeps the blur drawable of one [colorOSGlassBlur], which is created when it is first drawn. */
 private class ColorOSGlassRegion {
@@ -142,7 +152,7 @@ internal fun Modifier.colorOSGlassBlur(shape: Shape, material: Int): Modifier {
     val blur = LocalColorOSGlassBlur.current ?: return this
     val view = LocalView.current
     val region = remember(view) { ColorOSGlassRegion() }
-    val radius = with(LocalDensity.current) { ColorOSGlassBlurRadius.roundToPx() }
+    val defaultRadius = with(LocalDensity.current) { ColorOSGlassBlurRadius.roundToPx() }
     // The part of the element that is in the window, in its own coordinates.
     var visible by remember { mutableStateOf<Rect?>(null) }
 
@@ -192,7 +202,10 @@ internal fun Modifier.colorOSGlassBlur(shape: Shape, material: Int): Modifier {
             drawable.setVisible(true, false)
             drawable.setMaterial(material)
             drawable.setColor(0)
-            drawable.setBlurRadius(radius)
+            drawable.setBlurRadius(
+                SystemProperties.getInt(ColorOSGlassBlurRadiusProperty, 0).takeIf { it > 0 }
+                    ?: defaultRadius
+            )
             drawable.setCornerRadius(min(corner, shown.height / 2f))
             drawable.alpha = (alpha * 255).toInt()
             drawable.setBounds(

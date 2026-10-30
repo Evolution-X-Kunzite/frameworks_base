@@ -26,6 +26,7 @@ import android.text.TextUtils
 import android.util.PathParser
 import androidx.annotation.VisibleForTesting
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.graphics.res.animatedVectorResource
 import androidx.compose.animation.graphics.res.rememberAnimatedVectorPainter
 import androidx.compose.animation.graphics.vector.AnimatedImageVector
@@ -193,6 +194,10 @@ fun ClassicTileContent(
 
     val animatedColor by animateColorAsState(colors.background, label = "QSTileCircleBgColor")
     val animatedOutlineColor by animateColorAsState(colors.outline, label = "QSTileOutlineColor")
+    // A tile that is on keeps the glass under its bubble. The bubble fades in over it instead of
+    // replacing it, so the lit rim of the glass still shows around the edge.
+    val glassBubbleAlpha by
+        animateFloatAsState(if (onGlass && active) 1f else 0f, label = "QSTileGlassBubble")
 
     val iconBoxSize = CommonTileDefaults.TileHeight
     val iconSize = CommonTileDefaults.LargeTileIconSize
@@ -209,7 +214,16 @@ fun ClassicTileContent(
                 .then(
                     if (onGlass) {
                         Modifier.clip(iconShape)
-                            .colorOSGlassBlur(iconShape, colorOSGlassTileMaterial())
+                            .colorOSGlassBlur(
+                                iconShape,
+                                if (active) colorOSGlassActiveTileMaterial()
+                                else colorOSGlassTileMaterial(),
+                            )
+                            .drawBehind {
+                                if (glassBubbleAlpha > 0f) {
+                                    drawRect(color = animatedColor, alpha = glassBubbleAlpha)
+                                }
+                            }
                     } else {
                         Modifier
                     }
