@@ -390,6 +390,7 @@ constructor(
                                 },
                                 // The ColorOS panel has its own slider, so the QQS one fades out.
                                 fadeOutBrightnessSlider = { colorOSQsStyle },
+                                fadeOutQqsTiles = { colorOSQsStyle },
                             )
                         }
                         to(SceneKeys.EditMode) {
