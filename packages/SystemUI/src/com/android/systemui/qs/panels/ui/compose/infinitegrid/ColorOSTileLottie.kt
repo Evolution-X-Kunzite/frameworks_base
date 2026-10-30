@@ -33,14 +33,22 @@ import java.util.concurrent.ConcurrentHashMap
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-/** The animation of a tile: how it turns on, and how it turns off when that differs. */
-private class ColorOSTileClip(@RawRes val on: Int, @RawRes val off: Int? = null)
+/**
+ * The animation of a tile: how it turns on, and how it turns off when that differs. [scale] sizes
+ * the clip against the icon box, for a glyph that ColorOS draws larger than the others.
+ */
+private class ColorOSTileClip(
+    @RawRes val on: Int,
+    @RawRes val off: Int? = null,
+    val scale: Float = 1f,
+)
 
 private val ColorOSTileClips =
     mapOf(
         "wifi" to ColorOSTileClip(R.raw.coloros_tile_wifi),
         "internet" to ColorOSTileClip(R.raw.coloros_tile_wifi),
-        "bt" to ColorOSTileClip(R.raw.coloros_tile_bluetooth),
+        // The rune spans 92% of the clip, 25.6dp in the 28dp box, where ColorOS draws it 30dp tall.
+        "bt" to ColorOSTileClip(R.raw.coloros_tile_bluetooth, scale = 1.17f),
         "cell" to ColorOSTileClip(R.raw.coloros_tile_cellular),
         "airplane" to ColorOSTileClip(R.raw.coloros_tile_airplane),
         "dnd" to ColorOSTileClip(R.raw.coloros_tile_dnd),
@@ -141,7 +149,7 @@ internal fun colorOSTileLottie(
         composition = composition,
         progress = { progress.value },
         dynamicProperties = properties,
-        modifier = modifier.size(size),
+        modifier = modifier.size(size * clip.scale),
     )
     return true
 }
