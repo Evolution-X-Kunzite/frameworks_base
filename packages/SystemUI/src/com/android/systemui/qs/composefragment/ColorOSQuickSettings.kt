@@ -103,6 +103,8 @@ import com.android.systemui.qs.panels.ui.compose.infinitegrid.colorOSSpring
 import com.android.systemui.qs.panels.ui.compose.infinitegrid.rememberQSTileLabelHide
 import com.android.systemui.qs.panels.ui.viewmodel.TileViewModel
 import com.android.systemui.res.R
+import kotlin.math.abs
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 /** Tile specs that ColorOS pins to the fixed wide slots, in order of preference. */
@@ -367,6 +369,12 @@ private fun Modifier.glassSurface(glass: ColorOSGlass, shape: Shape): Modifier =
         this.clip(shape).background(glass.fill, shape).border(1.dp, ColorOSTileRim, shape)
     }
 
+/** How long a released slider waits for the value it set to be reported back. */
+private const val ColorOSSliderSettleMillis = 400L
+
+/** How far the reported value may be from the released one to count as caught up. */
+private const val ColorOSSliderSettleTolerance = 0.005f
+
 /**
  * A tall pill slider: the white fill rises from the bottom. Dragging is relative to where the
  * finger lands, like ColorOS. While dragging, the shade is asked not to steal the gesture.
@@ -382,13 +390,34 @@ private fun ColorOSVerticalSlider(
     onStop: (Float) -> Unit,
     modifier: Modifier = Modifier,
     fullIconTint: Color? = null,
+    snap: (Float) -> Float = { it },
 ) {
     val view = LocalView.current
     var local by remember { mutableFloatStateOf(fraction) }
     var dragging by remember { mutableStateOf(false) }
-    LaunchedEffect(fraction, dragging) { if (!dragging) local = fraction }
+    // After a release, [fraction] can still be the value from before the drag while the new one is
+    // being set, so the fill waits for it to catch up instead of jumping back and forward again.
+    var settling by remember { mutableStateOf(false) }
+    var settleFrom by remember { mutableFloatStateOf(fraction) }
+    LaunchedEffect(fraction, dragging, settling) {
+        when {
+            dragging -> Unit
+            !settling -> local = fraction
+            fraction != settleFrom || abs(fraction - local) < ColorOSSliderSettleTolerance -> {
+                settling = false
+                local = fraction
+            }
+            else -> {
+                delay(ColorOSSliderSettleMillis)
+                settling = false
+                local = fraction
+            }
+        }
+    }
     val currentOnChange by rememberUpdatedState(onChange)
     val currentOnStop by rememberUpdatedState(onStop)
+    val currentSnap by rememberUpdatedState(snap)
+    val currentFraction by rememberUpdatedState(fraction)
     val shape = RoundedCornerShape(percent = 50)
 
     Box(
@@ -414,6 +443,9 @@ private fun ColorOSVerticalSlider(
                             currentOnChange(local)
                             change.consume()
                         }
+                        local = currentSnap(local)
+                        settleFrom = currentFraction
+                        settling = true
                         currentOnStop(local)
                         dragging = false
                         view.parent?.requestDisallowInterceptTouchEvent(false)
@@ -499,6 +531,8 @@ private fun ColorOSVolumeSlider(
         onChange = { f -> scope.launch { audioVolumeInteractor.setVolume(stream, toVolume(f)) } },
         onStop = { f -> scope.launch { audioVolumeInteractor.setVolume(stream, toVolume(f)) } },
         modifier = modifier,
+        // The volume is in steps, so the fill rests on the step the volume gets set to.
+        snap = { f -> ((toVolume(f) - min).toFloat() / span).coerceIn(0f, 1f) },
     )
 }
 
