@@ -387,15 +387,15 @@ fun LargeTileContent(
             if (active) colorOSGlassActiveTileMaterial() else colorOSGlassTileMaterial()
         val glassBubbleAlpha by
             animateFloatAsState(if (onGlass && active) 1f else 0f, label = "QSTileGlassBubble")
+        // colorOSGlassBlur is @Composable, so it is built here and not inside the thenIf lambda.
+        val glassBlurModifier =
+            if (onGlass) Modifier.colorOSGlassBlur(iconShape, glassMaterial) else Modifier
         Box(
             modifier =
                 Modifier.size(CommonTileDefaults.ToggleTargetSize).thenIf(isDualTarget) {
                     Modifier.borderOnFocus(color = focusBorderColor, iconShape.topEnd)
                         .clip(iconShape)
-                        .then(
-                            if (onGlass) Modifier.colorOSGlassBlur(iconShape, glassMaterial)
-                            else Modifier
-                        )
+                        .then(glassBlurModifier)
                         .drawBehind {
                             if (onGlass) {
                                 if (glassBubbleAlpha > 0f) {
