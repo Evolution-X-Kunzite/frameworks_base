@@ -75,6 +75,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalResources
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.role
@@ -149,6 +150,7 @@ private val ColorOSGreen = Color(0xFF16A34A)
 private val ColorOSRed = Color(0xFFF2453D)
 private val ColorOSInk = Color(0xFF1C1C1E)
 private val COLOROS_DATA_TILES = setOf("cell", "mobile_data", "mobiledata")
+private val COLOROS_WIFI_TILES = setOf("wifi")
 
 /** Tiles whose icon is dark ink on the white bubble of a dark panel, instead of blue. */
 private val COLOROS_INK_TILES = setOf("dnd", "dark", "night")
@@ -522,9 +524,23 @@ fun ContentScope.Tile(
                                         tile.toggleClick()
                                     }
                                     .takeIf { isDualTarget }
+                            // ColorOS names the network in the Wi-Fi pill, with the status under
+                            // it. While Wi-Fi is only scanning there is no network to name.
+                            val scanningLabel =
+                                stringResource(R.string.quick_settings_scanning_for_wifi)
+                            val connectedLabel = stringResource(R.string.quick_settings_connected)
+                            val networkAsLabel =
+                                colorOSStyle &&
+                                    tile.spec.spec in COLOROS_WIFI_TILES &&
+                                    uiState.visualState == STATE_ACTIVE &&
+                                    !uiState.secondaryLabel.isNullOrBlank() &&
+                                    uiState.secondaryLabel != scanningLabel
                             LargeTileContent(
-                                label = uiState.label,
-                                secondaryLabel = uiState.secondaryLabel,
+                                label =
+                                    if (networkAsLabel) uiState.secondaryLabel else uiState.label,
+                                secondaryLabel =
+                                    if (networkAsLabel) connectedLabel else uiState.secondaryLabel,
+                                labelMaxLines = if (networkAsLabel) 2 else 1,
                                 iconProvider = iconProvider,
                                 sideDrawable = uiState.sideDrawable,
                                 colors = colors,

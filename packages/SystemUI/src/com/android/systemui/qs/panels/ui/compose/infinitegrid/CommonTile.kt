@@ -290,9 +290,12 @@ fun ClassicTileContent(
             val animatedLabelColor by animateColorAsState(colors.classicLabel, label = "QSTileLabelColor")
             val animatedSecondaryLabelColor by
                 animateColorAsState(colors.classicSecondaryLabel, label = "QSTileSecondaryLabelColor")
+            // ColorOS wraps the label over two lines and has no state line under it.
+            val colorOSLabels = LocalColorOSQsStyle.current
             val labels: @Composable () -> Unit = {
                 TileLabel(
                     text = label,
+                    maxLines = if (colorOSLabels) 2 else 1,
                     color = { animatedLabelColor },
                     style = MaterialTheme.typography.labelMedium.copy(
                         fontWeight = FontWeight.SemiBold,
@@ -303,7 +306,7 @@ fun ClassicTileContent(
                         .padding(top = 4.dp)
                         .fillMaxWidth(),
                 )
-                if (!TextUtils.isEmpty(secondaryLabel)) {
+                if (!colorOSLabels && !TextUtils.isEmpty(secondaryLabel)) {
                     TileLabel(
                         text = secondaryLabel ?: "",
                         color = { animatedSecondaryLabelColor },
@@ -357,6 +360,7 @@ fun LargeTileContent(
     onLongClick: (() -> Unit)? = null,
     lottieSpec: String? = null,
     active: Boolean = false,
+    labelMaxLines: Int = 1,
 ) {
     val isDualTarget = toggleClick != null
     Row(
@@ -430,6 +434,7 @@ fun LargeTileContent(
             colors = colors,
             accessibilityUiState = accessibilityUiState,
             isVisible = isVisible,
+            labelMaxLines = labelMaxLines,
             modifier = Modifier.weight(1f).bounceScale(TransformOrigin(0f, .5f), textScale),
         )
 
@@ -452,6 +457,7 @@ fun LargeTileLabels(
     modifier: Modifier = Modifier,
     isVisible: () -> Boolean = { true },
     accessibilityUiState: AccessibilityUiState? = null,
+    labelMaxLines: Int = 1,
 ) {
     val animatedLabelColor by animateColorAsState(colors.label, label = "QSTileLabelColor")
     val animatedSecondaryLabelColor by
@@ -464,6 +470,7 @@ fun LargeTileLabels(
             ),
             color = { animatedLabelColor },
             isVisible = isVisible,
+            maxLines = labelMaxLines,
         )
         if (!TextUtils.isEmpty(secondaryLabel)) {
             TileLabel(
@@ -566,6 +573,7 @@ private fun TileLabel(
     style: TextStyle,
     modifier: Modifier = Modifier,
     isVisible: () -> Boolean = { true },
+    maxLines: Int = 1,
 ) {
     var textSize by remember { mutableIntStateOf(0) }
 
@@ -575,7 +583,7 @@ private fun TileLabel(
         text = text,
         color = color,
         style = style,
-        maxLines = 1,
+        maxLines = maxLines,
         onTextLayout = { textSize = it.size.width },
         modifier =
             modifier
