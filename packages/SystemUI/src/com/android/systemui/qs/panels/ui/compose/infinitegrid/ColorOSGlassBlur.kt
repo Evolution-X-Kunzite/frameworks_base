@@ -246,10 +246,15 @@ internal fun Modifier.colorOSGlassBlur(shape: Shape, material: Int): Modifier {
                         region.drawable = it
                     }
             val corner =
-                (shape.createOutline(size, layoutDirection, this) as? Outline.Rounded)
-                    ?.roundRect
-                    ?.topLeftCornerRadius
-                    ?.x ?: 0f
+                when (val outline = shape.createOutline(size, layoutDirection, this)) {
+                    is Outline.Rounded -> outline.roundRect.topLeftCornerRadius.x
+                    // A path shape, like the icon shapes of the tiles, has no corner radius of its
+                    // own. The glass can only be a rounded rect, so give it the fullest one that
+                    // fits in the bounds of the path, which is exact for the circle of the tiles.
+                    is Outline.Generic ->
+                        outline.path.getBounds().let { min(it.width, it.height) / 2f }
+                    is Outline.Rectangle -> 0f
+                }
             drawable.setVisible(true, false)
             drawable.setMaterial(material)
             drawable.setColor(0)
