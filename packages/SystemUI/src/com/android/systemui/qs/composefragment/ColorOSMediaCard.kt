@@ -95,6 +95,9 @@ private val ColorOSMediaArtShape = RoundedCornerShape(10.dp)
 private val ColorOSMediaButtonSize = 44.dp
 private val ColorOSMediaOutputIconSize = 24.dp
 
+/** The icon of the app in the top left while the art fills the card, as big as the output one. */
+private val ColorOSMediaAppIconSize = ColorOSMediaOutputIconSize
+
 /** Corner radius of the glass slot the card sits on, which the light along its edge follows. */
 private val ColorOSMediaLightCorner = 32.dp
 
@@ -142,6 +145,17 @@ internal fun ColorOSMediaCard(
     // stays.
     val art = artwork
     val fillArt = artFill && art != null
+    // The thumbnail is gone while the art fills the card, the icon of the app takes its place.
+    val appIcon by
+        produceState<Drawable?>(initialValue = null, data.appIcon, fillArt) {
+            value =
+                data.appIcon?.takeIf { fillArt }?.let { icon ->
+                    withContext(Dispatchers.IO) {
+                        runCatching { icon.loadDrawable(context) }.getOrNull()
+                    }
+                }
+        }
+    val appIconBitmap = rememberDrawableBitmap(appIcon, ColorOSMediaAppIconSize)
     val scheme = MaterialTheme.colorScheme
     val contentScheme =
         if (fillArt) {
@@ -208,6 +222,7 @@ internal fun ColorOSMediaCard(
             ColorOSMediaLayout(
                 modifier = Modifier.fillMaxSize(),
                 showThumbnail = !fillArt,
+                appIcon = appIconBitmap.takeIf { fillArt },
                 description = listOfNotNull(data.song, data.artist, data.app).joinToString(", "),
                 onClick = data.clickIntent?.let { intent -> { onOpen(intent) } },
                 thumbnail = {
@@ -323,12 +338,14 @@ internal fun ColorOSIdleMediaCard(modifier: Modifier = Modifier) {
 
 /**
  * Layout shared by the playing and the idle card. [title] is skipped when null, so the idle text
- * sits on the artist line.
+ * sits on the artist line. The top left corner holds the thumbnail, or with [showThumbnail] off the
+ * [appIcon], if there is one.
  */
 @Composable
 private fun ColorOSMediaLayout(
     modifier: Modifier,
     showThumbnail: Boolean = true,
+    appIcon: ImageBitmap? = null,
     description: String,
     onClick: (() -> Unit)?,
     thumbnail: @Composable () -> Unit,
@@ -357,6 +374,13 @@ private fun ColorOSMediaLayout(
                 ) {
                     thumbnail()
                 }
+            } else if (appIcon != null) {
+                Icon(
+                    bitmap = appIcon,
+                    contentDescription = null,
+                    tint = onSurface,
+                    modifier = Modifier.padding(start = 16.dp).size(ColorOSMediaAppIconSize),
+                )
             }
             Spacer(Modifier.weight(1f))
             if (title != null) {
