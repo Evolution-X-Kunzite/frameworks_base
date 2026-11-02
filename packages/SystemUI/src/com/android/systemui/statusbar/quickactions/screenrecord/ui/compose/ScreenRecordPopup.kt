@@ -51,6 +51,7 @@ import com.android.systemui.statusbar.quickactions.ui.compose.IslandAccents
 import com.android.systemui.statusbar.quickactions.ui.compose.IslandGlyphBadge
 import com.android.systemui.statusbar.quickactions.ui.compose.PopupSurface
 import com.android.systemui.statusbar.quickactions.ui.compose.rememberElapsedDurationText
+
 private val PopupShape = RoundedCornerShape(32.dp)
 
 /** Expanded screen-recording status card for the dynamic island. */
@@ -77,6 +78,7 @@ fun ScreenRecordPopup(
                 infiniteRepeatable(tween(800, easing = FastOutSlowInEasing), RepeatMode.Reverse),
             label = "rec_alpha",
         )
+
     PopupSurface(
         shape = PopupShape,
         modifier = modifier.widthIn(min = 280.dp, max = 360.dp),
@@ -112,7 +114,7 @@ fun ScreenRecordPopup(
                             when (model) {
                                 is ScreenRecordPopupModel.Starting ->
                                     stringResource(
-                                        R.string.dynamic_island_screen_record_countdown,
+                                        R.string.dynamic_island_screen_record_starts_in,
                                         model.secondsUntilStarted,
                                     )
                                 is ScreenRecordPopupModel.Recording ->
