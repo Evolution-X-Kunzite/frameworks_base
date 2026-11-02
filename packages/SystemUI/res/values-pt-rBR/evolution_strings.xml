@@ -348,23 +348,83 @@
     <!-- Accessibility state description of an app volume slider [CHAR LIMIT=NONE] -->
     <string name="app_volume_panel_percent"><xliff:g id="percent" example="50">%d</xliff:g> por cento</string>
 
+    <!-- Dynamic island -->
+    <string name="dynamic_island_screen_record_short">REC.</string>
+    <string name="dynamic_island_screen_record_active">Gravação ativa</string>
+    <string name="dynamic_island_screen_record_countdown">Começa em %1$ss</string>
+    <string name="dynamic_island_alarm_title">Próximo alarme</string>
+    <string name="dynamic_island_flashlight_enabled">Ativada</string>
+    <string name="dynamic_island_flashlight_short">LIG.</string>
+    <string name="dynamic_island_open_action">Abrir</string>
+    <string name="dynamic_island_open_clock_action">Abrir Relógio</string>
+    <string name="dynamic_island_stopwatch_title">Cronômetro</string>
+    <string name="dynamic_island_alarm_active_title">Alarme</string>
+    <string name="dynamic_island_action_snooze">Soneca</string>
+    <string name="dynamic_island_action_lap">Volta</string>
+    <string name="dynamic_island_action_stop">Parar</string>
+    <string name="dynamic_island_action_resume">Retomar</string>
+    <string name="dynamic_island_charging_title">Carregando</string>
+    <string name="dynamic_island_charging_wireless_title">Carregamento sem fio</string>
+    <string name="dynamic_island_charging_battery_saver">Economia de bateria</string>
+    <string name="dynamic_island_charging_battery_settings">Configurações de bateria</string>
+    <string name="dynamic_island_charging_max_current">Corrente máxima</string>
+    <string name="dynamic_island_charging_max_power">Potência máxima</string>
+    <string name="dynamic_island_charging_max_voltage">Tensão máxima</string>
+    <string name="dynamic_island_charging_temperature">Temperatura</string>
+    <string name="dynamic_island_screen_record_starts_in">Começa em <xliff:g id="seconds" example="3">%d</xliff:g>s</string>
+    <string name="dynamic_island_event_hotspot">Roteador Wi-Fi</string>
+    <string name="dynamic_island_event_connected_devices"><xliff:g id="count" example="2">%d</xliff:g> dispositivos conectados</string>
+    <string name="dynamic_island_event_vpn">VPN</string>
+    <string name="dynamic_island_event_connected">Conectado</string>
+    <string name="dynamic_island_event_connecting">Conectando…</string>
+    <string name="dynamic_island_event_call">Chamada telefônica</string>
+    <string name="dynamic_island_event_incoming_call">Chamada recebida</string>
+    <string name="dynamic_island_event_calling">Chamando…</string>
+    <string name="dynamic_island_event_settings">Configurações</string>
+    <string name="dynamic_island_event_disconnect">Desconectar</string>
+    <string name="dynamic_island_bluetooth_left_earbud">Fone esquerdo</string>
+    <string name="dynamic_island_bluetooth_right_earbud">Fone direito</string>
+    <string name="dynamic_island_bluetooth_case">Estojo de carga</string>
+    <!-- Island chip text once the battery is at 100% [CHAR LIMIT=8] -->
+    <string name="dynamic_island_charging_full">Cheia</string>
+    <!-- Island alarm chip: time left until the next alarm [CHAR LIMIT=10] -->
+    <string name="dynamic_island_alarm_in_minutes">em <xliff:g id="minutes" example="42">%1$d</xliff:g>m</string>
+    <string name="dynamic_island_alarm_in_hours">em <xliff:g id="hours" example="7">%1$d</xliff:g>h</string>
+    <string name="dynamic_island_alarm_in_hours_minutes">em <xliff:g id="hours" example="7">%1$d</xliff:g>h <xliff:g id="minutes" example="5">%2$d</xliff:g>m</string>
+    <string name="dynamic_island_alarm_in_days">em <xliff:g id="days" example="2">%1$d</xliff:g>d</string>
+
     <!-- ColorOS style QS: shown in the media slot when nothing is playing -->
     <string name="qs_coloros_no_media">Nada reproduzindo</string>
-
     <!-- ColorOS style QS: title of the tile editor [CHAR LIMIT=20] -->
     <string name="qs_coloros_edit_title">Editar</string>
-
     <!-- ColorOS style QS: hint under the title of the tile editor [CHAR LIMIT=40] -->
     <string name="qs_coloros_edit_hint">Mantenha pressionado e arraste para reorganizar</string>
-    
+    <!-- ColorOS style QS: heading of current active tiles in the editor [CHAR LIMIT=30] -->
+    <string name="qs_coloros_edit_added">Blocos adicionados</string>
     <!-- ColorOS style QS: heading of the tiles that can be added in the editor [CHAR LIMIT=30] -->
     <string name="qs_coloros_edit_more">Mais blocos</string>
+    <!-- ColorOS style QS: hint for removing a tile via drag [CHAR LIMIT=40] -->
+    <string name="qs_coloros_edit_remove_hint">Arraste para cá para remover</string>
+    <!-- ColorOS style QS: empty state for added tiles [CHAR LIMIT=50] -->
+    <string name="qs_coloros_edit_empty_added">Nenhum bloco ativo. Toque ou arraste blocos abaixo para adicionar.</string>
+    <!-- ColorOS style QS: empty state for available tiles [CHAR LIMIT=50] -->
+    <string name="qs_coloros_edit_empty_more">Todos os blocos adicionados</string>
+    <!-- ColorOS style QS: title of the pill that opens the Bluetooth devices [CHAR LIMIT=20] -->
+    <string name="qs_coloros_my_devices">Meus Dispositivos</string>
+    <!-- ColorOS style QS: hint under the title of the My Devices pill [CHAR LIMIT=20] -->
+    <string name="qs_coloros_my_devices_hint">Toque para adicionar</string>
+    <!-- NothingOS style QS: ringer slider label for silent mode [CHAR LIMIT=20] -->
+    <string name="qs_nothing_ringer_silent">Silencioso</string>
+    <!-- NothingOS style QS: ringer slider label for vibrate mode [CHAR LIMIT=20] -->
+    <string name="qs_nothing_ringer_vibrate">Vibração</string>
+    <!-- NothingOS style QS: ringer slider label for normal (ring) mode [CHAR LIMIT=20] -->
+    <string name="qs_nothing_ringer_normal">Normal</string>
 
-    <!-- Screen recording: shown when the selfie camera preview cannot be started [CHAR LIMIT=80] -->
-    <string name="screenrecord_camera_unavailable">Câmera de selfie indisponível. A gravação de tela continuará.</string>
-
-    <!-- Screen recording: accessibility label of the draggable selfie camera preview [CHAR LIMIT=60] -->
-    <string name="screenrecord_camera_preview">Prévia da câmera de selfie. Arraste para mover.</string>
+    <!-- Nothing style QS edit mode: sliders that can be placed between the tile rows -->
+    <string name="qs_nothing_slider_brightness">Brilho</string>
+    <string name="qs_nothing_slider_volume">Volume</string>
+    <string name="qs_nothing_slider_add_brightness">Adicionar slider de brilho</string>
+    <string name="qs_nothing_slider_add_volume">Adicionar slider de volume</string>
 
     <!-- Global Actions (Compose power menu) -->
     <string name="global_actions_slide_to_power_off">Deslize para desligar</string>
