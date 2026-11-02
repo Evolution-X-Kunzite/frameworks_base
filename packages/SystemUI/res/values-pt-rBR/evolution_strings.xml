@@ -348,6 +348,24 @@
     <!-- Accessibility state description of an app volume slider [CHAR LIMIT=NONE] -->
     <string name="app_volume_panel_percent"><xliff:g id="percent" example="50">%d</xliff:g> por cento</string>
 
+    <!-- ColorOS style QS: shown in the media slot when nothing is playing -->
+    <string name="qs_coloros_no_media">Nada reproduzindo</string>
+
+    <!-- ColorOS style QS: title of the tile editor [CHAR LIMIT=20] -->
+    <string name="qs_coloros_edit_title">Editar</string>
+
+    <!-- ColorOS style QS: hint under the title of the tile editor [CHAR LIMIT=40] -->
+    <string name="qs_coloros_edit_hint">Mantenha pressionado e arraste para reorganizar</string>
+    
+    <!-- ColorOS style QS: heading of the tiles that can be added in the editor [CHAR LIMIT=30] -->
+    <string name="qs_coloros_edit_more">Mais blocos</string>
+
+    <!-- Screen recording: shown when the selfie camera preview cannot be started [CHAR LIMIT=80] -->
+    <string name="screenrecord_camera_unavailable">Câmera de selfie indisponível. A gravação de tela continuará.</string>
+
+    <!-- Screen recording: accessibility label of the draggable selfie camera preview [CHAR LIMIT=60] -->
+    <string name="screenrecord_camera_preview">Prévia da câmera de selfie. Arraste para mover.</string>
+
     <!-- Global Actions (Compose power menu) -->
     <string name="global_actions_slide_to_power_off">Deslize para desligar</string>
     <string name="global_actions_slide_to_restart">Deslize para reiniciar</string>
