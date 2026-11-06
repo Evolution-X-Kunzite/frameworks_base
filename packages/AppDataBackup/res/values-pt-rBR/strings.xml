@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (C) 2026 VoltageOS
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+<resources>
+    <string name="app_name">App Data Backup</string>
+    <string name="tab_apps">Apps</string>
+    <string name="tab_backups">Backups</string>
+    <string name="navigate_back">Voltar</string>
+    <string name="refresh">Atualizar</string>
+    <string name="retry">Tentar novamente</string>
+    <string name="cancel">Cancelar</string>
+    <string name="restore">Restaurar</string>
+    <string name="verify">Verificar</string>
+    <string name="delete">Excluir</string>
+    <string name="action_back_up">Fazer backup</string>
+    <string name="action_select_all">Selecionar tudo</string>
+    <string name="action_select_results">Selecionar resultados</string>
+    <string name="action_clear">Limpar seleção</string>
+    <string name="choose_apps">Escolher apps</string>
+
+    <string name="backup_headline">Faça backup dos seus apps</string>
+    <string name="backup_subheadline">Mantenha seus apps e dados prontos para um novo começo.</string>
+    <string name="library_headline">Seus backups</string>
+    <string name="library_subheadline">Tudo o que você salvou, pronto para restaurar.</string>
+    <string name="selection_label">PRONTO PARA FAZER BACKUP</string>
+    <string name="summary_empty_count">Escolha seus apps</string>
+    <string name="summary_empty_size">Escolha os apps que você deseja manter.</string>
+    <string name="summary_size">Cerca de %1$s selecionados</string>
+    <string name="library_summary_label">SALVO NESTE DISPOSITIVO</string>
+    <string name="library_summary_size">%1$s na sua biblioteca de backups</string>
+    <string name="search_apps">Pesquisar apps</string>
+    <string name="search_backups">Pesquisar backups</string>
+    <string name="clear_search">Limpar pesquisa</string>
+    <string name="app_size_version">%1$s · v%2$s</string>
+    <string name="backup_version">v%1$s</string>
+    <string name="size_unknown">Tamanho indisponível</string>
+    <string name="backup_incomplete">Incompleto</string>
+    <string name="show_contents">Conteúdo do backup</string>
+    <string name="hide_contents">Ocultar conteúdo</string>
+    <string name="delete_named_backup">Excluir backup de %1$s</string>
+    <plurals name="app_count">
+        <item quantity="one">%d app</item>
+        <item quantity="other">%d apps</item>
+    </plurals>
+    <plurals name="selected_count">
+        <item quantity="one">%d app selecionado</item>
+        <item quantity="other">%d apps selecionados</item>
+    </plurals>
+    <plurals name="backup_count">
+        <item quantity="one">%d backup</item>
+        <item quantity="other">%d backups</item>
+    </plurals>
+    <plurals name="backup_action_count">
+        <item quantity="one">Fazer backup de %d app</item>
+        <item quantity="other">Fazer backup de %d apps</item>
+    </plurals>
+
+    <string name="loading_apps">Procurando seus apps…</string>
+    <string name="loading_backups">Abrindo sua biblioteca…</string>
+    <string name="load_failed_title">Não foi possível carregar sua biblioteca</string>
+    <string name="load_failed_message">Atualize para tentar carregar seus apps e backups novamente.</string>
+    <string name="no_apps_title">Nenhum app para fazer backup</string>
+    <string name="no_apps_message">Os apps disponíveis para backup aparecerão aqui.</string>
+    <string name="no_backups_title">Nenhum backup ainda</string>
+    <string name="no_backups_message">Faça o backup do seu primeiro app e ele aparecerá aqui, pronto quando você precisar.</string>
+    <string name="no_results_title">Nenhum resultado encontrado</string>
+    <string name="no_results_message">Tente outro nome de app ou de pacote.</string>
+
+    <string name="backup_options_title">Criar um backup</string>
+    <string name="section_include">O que incluir</string>
+    <string name="comp_apk">App (APK)</string>
+    <string name="comp_app_data">Dados do app</string>
+    <string name="comp_de_data">Dados protegidos</string>
+    <string name="comp_external">Arquivos externos</string>
+    <string name="select_one_component">Selecione pelo menos um componente.</string>
+    <string name="components_helper">As permissões e configurações do app são incluídas automaticamente.</string>
+    <string name="chip_exclude_cache">Ignorar cache</string>
+    <string name="exclude_cache_helper">Deixar arquivos temporários para trás.</string>
+    <string name="section_encryption">Manter privado</string>
+    <string name="passphrase_optional">Frase de segurança (opcional)</string>
+    <string name="passphrase_label">Frase de segurança</string>
+    <string name="show_passphrase">Mostrar frase de segurança</string>
+    <string name="hide_passphrase">Ocultar frase de segurança</string>
+    <string name="encryption_helper">Adicione uma frase de segurança para criptografar este backup. Você precisará dela para restaurar.</string>
+    <string name="section_retention">Histórico de backup</string>
+    <string name="retention_label">Versões a manter por app</string>
+    <string name="retention_helper">Deixe em branco ou digite 0 para manter todas as versões. Backups mais antigos além deste limite serão excluídos após um backup bem-sucedido.</string>
+    <string name="retention_invalid">Digite um número inteiro de 0 a 2147483647.</string>
+    <string name="backup_location">Salvo na pasta AppDataBackup no armazenamento interno.</string>
+
+    <string name="confirm_restore_title">Restaurar %1$s?</string>
+    <string name="confirm_restore_message">Isso restaurará os componentes salvos, reinstalando o app se o seu APK estiver incluído e substituindo os dados de app incluídos. O app será interrompido durante a restauração.</string>
+    <string name="confirm_verify_title">Verificar %1$s?</string>
+    <string name="confirm_verify_message">Verifique se este backup está completo e pode ser lido.</string>
+    <string name="confirm_delete_title">Excluir backup?</string>
+    <string name="confirm_delete_message">Excluir este backup de %1$s? Esta ação não pode ser desfeita.</string>
+    <string name="encrypted_backup_message">Este backup está criptografado. Digite a frase de segurança usada para criá-lo.</string>
+    <string name="content_includes">Inclui %1$s</string>
+    <string name="content_apk">App (APK)</string>
+    <string name="content_app_data">Dados do app</string>
+    <string name="content_device_data">Dados protegidos</string>
+    <string name="content_external">Arquivos externos</string>
+    <string name="content_permissions">Permissões e configurações</string>
+    <string name="content_encrypted">Criptografado</string>
+
+    <string name="progress_backup_title">Fazendo backup dos seus apps</string>
+    <string name="progress_restore_title">Restaurando seu app</string>
+    <string name="progress_verify_title">Verificando seu backup</string>
+    <string name="progress_delete_title">Excluindo backup</string>
+    <string name="progress_preparing">Preparando tudo…</string>
+    <string name="progress_cancelling">Cancelando…</string>
+    <string name="progress_installing">Instalando %1$s…</string>
+    <string name="progress_restoring_data">Restaurando dados de %1$s…</string>
+    <string name="progress_app_count">%1$d de %2$d apps processados</string>
+    <string name="backup_complete">Backup concluído</string>
+    <string name="restore_complete">Restauração concluída. Você pode reabrir o app.</string>
+    <string name="backup_cancelled">Backup cancelado</string>
+    <string name="restore_cancelled">Restauração cancelada</string>
+    <string name="operation_cancelled">Operação cancelada</string>
+    <string name="operation_failed">Não foi possível concluir a operação. Tente novamente.</string>
+    <string name="operation_partial">Concluído com alguns erros: %1$s</string>
+    <string name="operation_error">Não foi possível concluir a operação: %1$s</string>
+    <string name="cancel_failed">Não foi possível cancelar. Tente novamente.</string>
+    <string name="verify_valid">Backup verificado e pronto para restaurar</string>
+    <string name="verify_failed">Falha na verificação do backup: %1$s</string>
+    <string name="delete_complete">Backup excluído</string>
+    <string name="delete_failed">Não foi possível excluir este backup. Tente novamente.</string>
+</resources>
