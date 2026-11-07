@@ -346,6 +346,19 @@
     <string name="dynamic_island_charging_max_power">Max power</string>
     <string name="dynamic_island_charging_max_voltage">Max voltage</string>
     <string name="dynamic_island_charging_temperature">Temperature</string>
+    <string name="dynamic_island_event_hotspot">Hotspot</string>
+    <string name="dynamic_island_event_connected_devices"><xliff:g id="count" example="2">%d</xliff:g> devices connected</string>
+    <string name="dynamic_island_event_vpn">VPN</string>
+    <string name="dynamic_island_event_connected">Connected</string>
+    <string name="dynamic_island_event_connecting">Connecting…</string>
+    <string name="dynamic_island_event_call">Phone Call</string>
+    <string name="dynamic_island_event_incoming_call">Incoming call</string>
+    <string name="dynamic_island_event_calling">Calling…</string>
+    <string name="dynamic_island_event_settings">Settings</string>
+    <string name="dynamic_island_event_disconnect">Disconnect</string>
+    <string name="dynamic_island_bluetooth_left_earbud">Left earbud</string>
+    <string name="dynamic_island_bluetooth_right_earbud">Right earbud</string>
+    <string name="dynamic_island_bluetooth_case">Charging case</string>
     <!-- Island chip text once the battery is at 100% [CHAR LIMIT=8] -->
     <string name="dynamic_island_charging_full">Full</string>
     <!-- Island alarm chip: time left until the next alarm [CHAR LIMIT=10] -->
